@@ -1,0 +1,44 @@
+import {useState} from 'react';
+
+import styles from './ProjectForm.module.css';
+import Input from '../form/Input.js';
+import Select from '../form/Select.js';
+import SubmitButton from '../form/SubmitButton.js';
+
+function ProjectForm({btnText}){
+    const [categories, setCategories] = useState([]);
+
+    //request com fetchAPI do JS
+    fetch("http://localhost:5000/categories", {
+        method: "Get",
+        headers: {
+            'Content-Type': 'application/json',
+
+        },
+    })  //Peguei a resposta e converti para JSON
+        .then(resp => resp.json()) 
+        .then((data) => {
+            setCategories(data) //peguei os dados em JSON e setei no estado usando o hook de setCategories
+        })
+        .catch((err) => console.log(err));
+
+    return(
+        <form className={styles.form}>
+            <Input 
+                type="text" 
+                text="Nome do projeto" 
+                name="name" 
+                placeholder="insira o nome do projeto" 
+            />
+            <Input 
+                type="number" 
+                text="Orçamento do projeto" 
+                name="budget" 
+                placeholder="insira o orçamento total" 
+            />
+            <Select name="category_id" text="Selecione a categoria" options={categories}/>
+            <SubmitButton text={btnText}/>
+        </form>
+    )
+}
+export default ProjectForm;    
